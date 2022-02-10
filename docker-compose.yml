@@ -1,0 +1,37 @@
+
+
+version: '3.7'
+
+services:
+  nudges:
+#    container_name: test_nudges
+    build: .
+    command: uvicorn app.main:app --host 0.0.0.0 --port 80
+#    command:
+#      - uvicorn app.main:app --host 0.0.0.0 --port 80
+#      - echo ${pwd}
+#      - python app.main.py
+    volumes:
+      - .:/usr/src/personalised_nudges
+    ports:
+      - '8000:80'
+    depends_on:
+      - db
+
+  db2:
+    image: postgres:12.0-alpine
+    container_name: test_db2
+    volumes:
+#      If I do not specify '.' at the beginning of line, where it will store data???
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=username
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=nudges
+    expose:
+      - 54321
+
+volumes:
+  postgres_data:
+
+
